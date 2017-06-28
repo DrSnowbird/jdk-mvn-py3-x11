@@ -33,7 +33,6 @@ RUN export DISPLAY=${DISPLAY} && \
     apt-get clean all && \
     ls /usr/local/ 
     
-USER ${USER_NAME}
 WORKDIR ${HOME}
 
 CMD /usr/bin/firefox
