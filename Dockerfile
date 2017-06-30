@@ -20,6 +20,7 @@ RUN apt-get update && \
 ENV USER_NAME=developer
 ENV HOME=/home/${USER_NAME}
 
+## ---- user: developer ----
 RUN export DISPLAY=${DISPLAY} && \
     useradd ${USER_NAME} && \
     export uid=${USER_ID} gid=${GROUP_ID} && \
