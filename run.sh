@@ -40,7 +40,6 @@ mkdir -p ${local_docker_data2}
 
 #### ---- ports mapping ----
 docker_port1=
-
 local_docker_port1=
 
 ##################################################
@@ -58,7 +57,7 @@ echo "docker run -d --name ${instanceName} -v ${docker_data}:/${docker_volume_da
 echo "---------------------------------------------"
 echo "---- Starting a Container for ${imageTag}"
 echo "---------------------------------------------"
-#DISPLAY=${MY_IP}:0 \
+DISPLAY=${MY_IP}:0 \
 docker run -ti --rm \
     --name=${instanceName} \
     -e DISPLAY=$DISPLAY \
