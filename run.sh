@@ -57,14 +57,14 @@ echo "docker run -d --name ${instanceName} -v ${docker_data}:/${docker_volume_da
 echo "---------------------------------------------"
 echo "---- Starting a Container for ${imageTag}"
 echo "---------------------------------------------"
-DISPLAY=${MY_IP}:0 \
+export DISPLAY=:0.0
 docker run -ti --rm \
-    --name=${instanceName} \
-    -e DISPLAY=$DISPLAY \
+    -e DISPLAY=${DISPLAY} \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     -v ${local_docker_data1}:${docker_volume_data1} \
     -v ${local_docker_data2}:${docker_volume_data2} \
-    ${imageTag}
+    --name=${instanceName} \
+    ${imageTag} /usr/bin/firefox
     
 echo ">>> Docker Status"
 docker ps -a | grep "${instanceName}"
