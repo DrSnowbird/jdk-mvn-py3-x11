@@ -1,0 +1,6 @@
+data
+*.save
+*.tar.gz
+*.tgz
+*.zip
+*.swp

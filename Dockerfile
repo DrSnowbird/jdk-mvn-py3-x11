@@ -17,6 +17,8 @@ RUN apt-get update && \
     apt-get install -y libxext-dev libxrender-dev libxtst-dev firefox && \
     apt-get install -y apt-transport-https ca-certificates libcurl3-gnutls
 
+RUN apt-get install -y apt-utils packagekit-gtk3-module libcanberra-gtk3-module
+
 ## ---- user: developer ----
 ENV USER_NAME=developer
 ENV HOME=/home/${USER_NAME}
