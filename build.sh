@@ -15,7 +15,7 @@ fi
 DOCKER_IMAGE_REPO=`echo $(basename $PWD)|tr '[:upper:]' '[:lower:]' `
 imageTag=${1:-"openkbs/${DOCKER_IMAGE_REPO}"}
 
-docker build -t ${imageTag} \
+docker build --rm -t ${imageTag} \
 	-f Dockerfile .
 
 echo "----> To run in interactive mode: "
