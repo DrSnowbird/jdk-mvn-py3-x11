@@ -9,7 +9,7 @@ fi
 #### **** Container package information ****
 ###################################################
 MY_IP=`ip route get 1|awk '{print$NF;exit;}'`
-DOCKER_IMAGE_REPO=`echo $(basename $PWD)|tr '[:upper:]' '[:lower:]' `
+DOCKER_IMAGE_REPO=`echo $(basename $PWD)|tr '[:upper:]' '[:lower:]'|tr "/: " "_" `
 imageTag=${1:-"openkbs/${DOCKER_IMAGE_REPO}"}
 #PACKAGE=`echo ${imageTag##*/}|tr "/\-: " "_"`
 PACKAGE="${imageTag##*/}"
@@ -68,7 +68,8 @@ echo ${VOLUME_MAP}
 #instanceName=my-${1:-${imageTag%/*}}_$RANDOM
 #instanceName=my-${1:-${imageTag##*/}}
 ## -- transform '-' and space to '_' 
-instanceName=`echo $(basename ${imageTag})|tr '[:upper:]' '[:lower:]'|tr "/\-: " "_"`
+#instanceName=`echo $(basename ${imageTag})|tr '[:upper:]' '[:lower:]'|tr "/\-: " "_"`
+instanceName=`echo $(basename ${imageTag})|tr '[:upper:]' '[:lower:]'|tr "/: " "_"`
 
 echo "---------------------------------------------"
 echo "---- Starting a Container for ${imageTag}"
@@ -80,5 +81,4 @@ docker run -ti --rm \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     ${VOLUME_MAP} \
     ${imageTag}
-
 

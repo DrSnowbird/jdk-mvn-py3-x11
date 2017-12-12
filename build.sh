@@ -12,22 +12,30 @@ fi
 ###################################################
 #### **** Container package information ****
 ###################################################
-DOCKER_IMAGE_REPO=`echo $(basename $PWD)|tr '[:upper:]' '[:lower:]' `
+DOCKER_IMAGE_REPO=`echo $(basename $PWD)|tr '[:upper:]' '[:lower:]'|tr "/: " "_" `
 imageTag=${1:-"openkbs/${DOCKER_IMAGE_REPO}"}
 
-docker build -t ${imageTag} \
+docker build --rm -t ${imageTag} \
 	-f Dockerfile .
 
-echo "----> To run in interactive mode: "
+echo "----> Shell into the Container in interactive mode: "
+echo "  docker exec -it --name <some-name> /bin/bash"
+echo "e.g."
+echo "  docker run --name "my-$(basename $imageTag)" /bin/bash "
+
+echo "----> Run: "
 echo "  docker run --name <some-name> -it ${imageTag} /bin/bash"
 echo "e.g."
-echo "  docker run it ${imageTag} "
-echo "  docker run --name "my-$(basename $imageTag)" -it ${imageTag} "
+echo "  docker run --name "my-$(basename $imageTag)" ${imageTag} "
 
-echo "----> Docker Images"
+echo "----> Run in interactive mode: "
+echo "  docker run -it --name <some-name> ${imageTag} /bin/bash"
+echo "e.g."
+echo "  docker run -it --name "my-$(basename $imageTag)" -it ${imageTag} "
+
+echo "----> Build Docker Images again: "
 echo "To build again: (there is a dot at the end of the command!)"
 echo "  docker build -t ${imageTag} . "
 echo
 docker images |grep "$imageTag"
-
 
