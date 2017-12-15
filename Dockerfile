@@ -1,4 +1,4 @@
-FROM openkbs/jre-mvn-py3
+FROM openkbs/jdk-mvn-py3
 
 MAINTAINER DrSnowbird "DrSnowbird@openkbs.org"
 
