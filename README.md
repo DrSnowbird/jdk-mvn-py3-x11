@@ -9,13 +9,13 @@
 ## Pull the image from Docker Repository
 
 ```bash
-docker pull openkbs/jre-mvn-py3-x11
+docker pull openkbs/jdk-mvn-py3-x11
 ```
 
 ## Base the image to build add-on components
 
 ```Dockerfile
-FROM openkbs/jre-mvn-py3-x11
+FROM openkbs/jdk-mvn-py3-x11
 ```
 
 ## Run the image
@@ -25,27 +25,27 @@ Then, you're ready to run:
 
 ```bash
 mkdir ./data
-docker run -d --name my-jre-mvn-py3-x11 -v $PWD/data:/data -i -t openkbs/jre-mvn-py3-x11
+docker run -d --name my-jdk-mvn-py3-x11 -v $PWD/data:/data -i -t openkbs/jdk-mvn-py3-x11
 ```
 
 ## Build and Run your own image
-Say, you will build the image "my/jre-mvn-py3-x11".
+Say, you will build the image "my/jdk-mvn-py3-x11".
 
 ```bash
-docker build -t my/jre-mvn-py3-x11 .
+docker build -t my/jdk-mvn-py3-x11 .
 ```
 
-To run your own image, say, with some-jre-mvn-py3-x11:
+To run your own image, say, with some-jdk-mvn-py3-x11:
 
 ```bash
 mkdir ./data
-docker run -d --name some-jre-mvn-py3-x11 -v $PWD/data:/data -i -t my/jre-mvn-py3
+docker run -d --name some-jdk-mvn-py3-x11 -v $PWD/data:/data -i -t my/jdk-mvn-py3
 ```
 
 ## Shell into the Docker instance
 
 ```bash
-docker exec -it some-jre-mvn-py3-x11 /bin/bash
+docker exec -it some-jdk-mvn-py3-x11 /bin/bash
 ```
 
 ## Run Python code
@@ -53,13 +53,13 @@ docker exec -it some-jre-mvn-py3-x11 /bin/bash
 To run Python code
 
 ```bash
-docker run -it --rm openkbs/jre-mvn-py3-x11 python3 -c 'print("Hello World")'
+docker run -it --rm openkbs/jdk-mvn-py3-x11 python3 -c 'print("Hello World")'
 ```
 
 or,
 
 ```bash
-docker run -i --rm openkbs/jre-mvn-py3-x11 python3 < myPyScript.py
+docker run -i --rm openkbs/jdk-mvn-py3-x11 python3 < myPyScript.py
 ```
 
 or,
@@ -67,13 +67,13 @@ or,
 ```bash
 mkdir ./data
 echo "print('Hello World')" > ./data/myPyScript.py
-docker run -it --rm --name some-jre-mvn-py3-x11 -v "$PWD"/data:/data openkbs/jre-mvn-py3-x11 python3 myPyScript.py
+docker run -it --rm --name some-jdk-mvn-py3-x11 -v "$PWD"/data:/data openkbs/jdk-mvn-py3-x11 python3 myPyScript.py
 ```
 
 or,
 
 ```bash
-alias dpy3='docker run --rm openkbs/jre-mvn-py3-x11 python3'
+alias dpy3='docker run --rm openkbs/jdk-mvn-py3-x11 python3'
 dpy3 -c 'print("Hello World")'
 ```
 
@@ -93,8 +93,8 @@ public class HelloWorld {
 }
 EOF
 cat ./data/HelloWorld.java
-alias djavac='docker run -it --rm --name some-jre-mvn-py3-x11 -v '$PWD'/data:/data openkbs/jre-mvn-py3-x11 javac'
-alias djava='docker run -it --rm --name some-jre-mvn-py3-x11 -v '$PWD'/data:/data openkbs/jre-mvn-py3-x11 java'
+alias djavac='docker run -it --rm --name some-jdk-mvn-py3-x11 -v '$PWD'/data:/data openkbs/jdk-mvn-py3-x11 javac'
+alias djava='docker run -it --rm --name some-jdk-mvn-py3-x11 -v '$PWD'/data:/data openkbs/jdk-mvn-py3-x11 java'
 
 djavac HelloWorld.java
 djava HelloWorld
@@ -106,8 +106,11 @@ Hello, World
 Hence, the alias above, "djavac" and "djava" is your docker-based "javac" and "java" commands and
 it will work the same way as your local installed Java's "javac" and "java" commands.
 However, for larger complex projects, you might want to consider to use Docker-based IDE.
-For example, try this docker-scala-ide:
-[scala-ide-docker](https://github.com/DrSnowbird/scala-ide-docker)
-[Scala IDE in Docker](https://github.com/stevenalexander/docker-scala-ide)
+
+For example, try the following docker-scala-ide:
+[Intellij-Docker](https://github.com/DrSnowbird/intellij-docker)
+[Eclipse-Oxygen-Docker](https://github.com/DrSnowbird/eclipse-oxygen-docker)
+[Scala-Ide-Docker](https://github.com/DrSnowbird/scala-ide-docker)
+
 See also,
 [Java Development in Docker](https://blog.giantswarm.io/getting-started-with-java-development-on-docker/)
