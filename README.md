@@ -1,13 +1,11 @@
-# Java 8 (1.8.0_152) JRE server + Maven 3.5.0 + Python 3.5.2 + X11 (display GUI)
+# Java 8 (1.8.0_162) JRE server + Maven 3.5.0 + Python 3.5.2 + X11 (display GUI)
 
-##Components:
-Components:
-* Oracle Java "1.8.0_152" Java JDK from Oracle
-  Java(TM) SE JDK Environment (build 1.8.0_152)
+## Components
+* java version "1.8.0_162"
+  Java(TM) SE Runtime Environment (build 1.8.0_162-b12)
+  Java HotSpot(TM) 64-Bit Server VM (build 25.162-b12, mixed mode)
 * Apache Maven 3.5.0
 * Other tools: git wget unzip vim python python-setuptools python-dev python-numpy
-
-
 ## Pull the image from Docker Repository
 
 ```bash
