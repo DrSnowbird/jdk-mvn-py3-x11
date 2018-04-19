@@ -1,11 +1,14 @@
-# Java 8 (1.8.0_162) JRE server + Maven 3.5.0 + Python 3.5.2 + X11 (display GUI)
+# Java 8 (1.8.0_172) JDK + Maven 3.5 + Python 3.5 + X11 (display GUI)
+[![](https://images.microbadger.com/badges/image/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own version badge on microbadger.com")
 
 ## Components
-* java version "1.8.0_162"
-  Java(TM) SE Runtime Environment (build 1.8.0_162-b12)
-  Java HotSpot(TM) 64-Bit Server VM (build 25.162-b12, mixed mode)
-* Apache Maven 3.5.0
-* Other tools: git wget unzip vim python python-setuptools python-dev python-numpy
+* java version "1.8.0_172"
+  Java(TM) SE Runtime Environment (build 1.8.0_172-b11)
+  Java HotSpot(TM) 64-Bit Server VM (build 25.172-b11, mixed mode)
+* Apache Maven 3.5.3
+* Python 3.5.2
+* X11 display desktop
+* Other tools: git wget unzip vim python python-setuptools python-dev python-numpy 
 ## Pull the image from Docker Repository
 
 ```bash
@@ -107,10 +110,18 @@ Hence, the alias above, "djavac" and "djava" is your docker-based "javac" and "j
 it will work the same way as your local installed Java's "javac" and "java" commands.
 However, for larger complex projects, you might want to consider to use Docker-based IDE.
 
-For example, try the following docker-scala-ide:
-[Intellij-Docker](https://github.com/DrSnowbird/intellij-docker)
-[Eclipse-Oxygen-Docker](https://github.com/DrSnowbird/eclipse-oxygen-docker)
-[Scala-Ide-Docker](https://github.com/DrSnowbird/scala-ide-docker)
+# Display X11 Issue
+More resource in X11 display of Eclipse on your host machine's OS, please see
+* [X11 Display problem](https://askubuntu.com/questions/871092/failed-to-connect-to-mir-failed-to-connect-to-server-socket-no-such-file-or-di)
+* [X11 Display with Xhost](http://www.ethicalhackx.com/fix-gtk-warning-cannot-open-display/)
 
-See also,
-[Java Development in Docker](https://blog.giantswarm.io/getting-started-with-java-development-on-docker/)
+# Other docker-based IDE
+* [openkbs/eclipse-oxygen-docker](https://hub.docker.com/r/openkbs/eclipse-oxygen-docker/)
+* [openkbs/netbeans](https://hub.docker.com/r/openkbs/netbeans/)
+* [openkbs/scala-ide-docker](https://hub.docker.com/r/openkbs/scala-ide-docker/)
+* [openkbs/pycharm-docker](https://hub.docker.com/r/openkbs/pycharm-docker/)
+* [openkbs/webstorm-docker](https://hub.docker.com/r/openkbs/webstorm-docker/)
+* [openkbs/intellj-docker](https://hub.docker.com/r/openkbs/intellij-docker/)
+
+# See also
+* [Java Development in Docker](https://blog.giantswarm.io/getting-started-with-java-development-on-docker/)
