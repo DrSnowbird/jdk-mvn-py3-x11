@@ -110,11 +110,6 @@ Hence, the alias above, "djavac" and "djava" is your docker-based "javac" and "j
 it will work the same way as your local installed Java's "javac" and "java" commands.
 However, for larger complex projects, you might want to consider to use Docker-based IDE.
 
-# Display X11 Issue
-More resource in X11 display of Eclipse on your host machine's OS, please see
-* [X11 Display problem](https://askubuntu.com/questions/871092/failed-to-connect-to-mir-failed-to-connect-to-server-socket-no-such-file-or-di)
-* [X11 Display with Xhost](http://www.ethicalhackx.com/fix-gtk-warning-cannot-open-display/)
-
 # Other docker-based IDE
 * [openkbs/eclipse-oxygen-docker](https://hub.docker.com/r/openkbs/eclipse-oxygen-docker/)
 * [openkbs/netbeans](https://hub.docker.com/r/openkbs/netbeans/)
@@ -125,3 +120,12 @@ More resource in X11 display of Eclipse on your host machine's OS, please see
 
 # See also
 * [Java Development in Docker](https://blog.giantswarm.io/getting-started-with-java-development-on-docker/)
+
+# Display X11 Issue
+More resource in X11 display of Eclipse on your host machine's OS, please see
+* [X11 Display problem](https://askubuntu.com/questions/871092/failed-to-connect-to-mir-failed-to-connect-to-server-socket-no-such-file-or-di)
+* [X11 Display with Xhost](http://www.ethicalhackx.com/fix-gtk-warning-cannot-open-display/)
+
+# Other possible Issues
+You might see the warning message in the launching xterm console like below, you can just ignore it. I googles around and some blogs just suggested to ignore since the IDE still functional ok.
+
