@@ -1,7 +1,7 @@
 # Java 8 (1.8.0_172) JDK + Maven 3.5 + Python 3.5 + X11 (display GUI)
 [![](https://images.microbadger.com/badges/image/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own version badge on microbadger.com")
 
-## Components
+# Components
 * java version "1.8.0_172"
   Java(TM) SE Runtime Environment (build 1.8.0_172-b11)
   Java HotSpot(TM) 64-Bit Server VM (build 25.172-b11, mixed mode)
@@ -9,19 +9,20 @@
 * Python 3.5.2
 * X11 display desktop
 * Other tools: git wget unzip vim python python-setuptools python-dev python-numpy 
-## Pull the image from Docker Repository
+
+# Pull the image from Docker Repository
 
 ```bash
 docker pull openkbs/jdk-mvn-py3-x11
 ```
 
-## Base the image to build add-on components
+# Base the image to build add-on components
 
 ```Dockerfile
 FROM openkbs/jdk-mvn-py3-x11
 ```
 
-## Run the image
+# Run the image
 
 Then, you're ready to run:
 - make sure you create your work directory, e.g., ./data
@@ -31,7 +32,7 @@ mkdir ./data
 docker run -d --name my-jdk-mvn-py3-x11 -v $PWD/data:/data -i -t openkbs/jdk-mvn-py3-x11
 ```
 
-## Build and Run your own image
+# Build and Run your own image
 Say, you will build the image "my/jdk-mvn-py3-x11".
 
 ```bash
