@@ -1,10 +1,10 @@
-# Java 8 (1.8.0_172) JDK + Maven 3.5 + Python 3.5 + X11 (display GUI)
+# Java 8 (1.8.0_181) JDK + Maven 3.5 + Python 3.5 + X11 (display GUI)
 [![](https://images.microbadger.com/badges/image/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own version badge on microbadger.com")
 
 # Components
-* java version "1.8.0_172"
-  Java(TM) SE Runtime Environment (build 1.8.0_172-b11)
-  Java HotSpot(TM) 64-Bit Server VM (build 25.172-b11, mixed mode)
+* java version "1.8.0_181"
+  Java(TM) SE Runtime Environment (build 1.8.0_181-b13)
+  Java HotSpot(TM) 64-Bit Server VM (build 25.181-b13, mixed mode)
 * Apache Maven 3.5.3
 * Python 3.5.2
 * X11 display desktop
