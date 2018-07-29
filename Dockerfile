@@ -38,5 +38,6 @@ RUN export DISPLAY=${DISPLAY} && \
     ls /usr/local/ 
     
 WORKDIR ${HOME}
-
-CMD "/usr/bin/firefox"
+USER ${USER_NAME}
+CMD ["/usr/bin/firefox"]
+#ENTRYPOINT ["/usr/bin/firefox"]
