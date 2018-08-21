@@ -40,4 +40,4 @@ RUN export DISPLAY=${DISPLAY} && \
 WORKDIR ${HOME}
 USER ${USER_NAME}
 CMD ["/usr/bin/firefox"]
-#ENTRYPOINT ["/usr/bin/firefox"]
+
