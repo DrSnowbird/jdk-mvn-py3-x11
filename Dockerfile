@@ -20,24 +20,25 @@ RUN apt-get update && \
 RUN apt-get install -y apt-utils packagekit-gtk3-module libcanberra-gtk3-module
 
 ## ---- user: developer ----
-ENV USER_NAME=developer
-ENV HOME=/home/${USER_NAME}
+ENV USER=developer
+ENV USER_NAME=${USER}
+ENV HOME=/home/${USER}
 
 RUN export DISPLAY=${DISPLAY} && \
-    useradd ${USER_NAME} && \
+    useradd ${USER} && \
     export uid=${USER_ID} gid=${GROUP_ID} && \
     mkdir -p ${HOME} && \
     mkdir -p ${HOME}/workspace && \
     mkdir -p /etc/sudoers.d && \
-    echo "${USER_NAME}:x:${USER_ID}:${GROUP_ID}:${USER_NAME},,,:${HOME}:/bin/bash" >> /etc/passwd && \
-    echo "${USER_NAME}:x:${USER_ID}:" >> /etc/group && \
-    echo "${USER_NAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USER_NAME} && \
-    chmod 0440 /etc/sudoers.d/${USER_NAME} && \
-    chown ${USER_NAME}:${USER_NAME} -R ${HOME} && \
+    echo "${USER}:x:${USER_ID}:${GROUP_ID}:${USER},,,:${HOME}:/bin/bash" >> /etc/passwd && \
+    echo "${USER}:x:${USER_ID}:" >> /etc/group && \
+    echo "${USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USER} && \
+    chmod 0440 /etc/sudoers.d/${USER} && \
+    chown ${USER}:${USER} -R ${HOME} && \
     apt-get clean all && \
     ls /usr/local/ 
     
 WORKDIR ${HOME}
-USER ${USER_NAME}
+USER ${USER}
 CMD ["/usr/bin/firefox"]
 
