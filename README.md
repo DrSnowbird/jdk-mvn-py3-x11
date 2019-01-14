@@ -11,6 +11,7 @@ This image contains [Oracle JDK 8](http://www.oracle.com/technetwork/java/javase
   Java HotSpot(TM) 64-Bit Server VM (build 25.191-b12, mixed mode)
 * Apache Maven 3.6.0
 * Python 3.5.2
+* npm 3.5.2 + nodejs v4.2.6
 * Gradle 5.1
 * Other tools: git wget unzip vim python python-setuptools python-dev python-numpy 
 * X11 display desktop
