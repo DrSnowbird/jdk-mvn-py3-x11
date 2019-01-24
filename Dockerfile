@@ -18,7 +18,8 @@ RUN apt-get update && \
     apt-get install -y apt-transport-https ca-certificates libcurl3-gnutls
 
 RUN apt-get install -y apt-utils packagekit-gtk3-module libcanberra-gtk3-module
-RUN apt-get install dbus-x11 
+RUN apt-get install -y dbus-x11 
+RUN apt-get install -y xdg-utils --fix-missing
 
 ## ---- user: developer ----
 ENV USER=developer
