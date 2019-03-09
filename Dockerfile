@@ -5,15 +5,12 @@ MAINTAINER DrSnowbird "DrSnowbird@openkbs.org"
 ARG DISPLAY=${DISPLAY:-":0.0"}
 ENV DISPLAY=${DISPLAY}
 
-ARG USER_ID=${USER_ID:-1000}
-ENV USER_ID=${USER_ID}
-
-ARG GROUP_ID=${GROUP_ID:-1000}
-ENV GROUP_ID=${GROUP_ID}
+USER root
 
 ## ---- X11 ----
 RUN apt-get update && \
-    apt-get install -y sudo xauth xorg openbox && \
+    # apt-get install -y sudo xauth xorg openbox && \
+    apt-get install -y sudo xauth xorg fluxbox && \
     apt-get install -y libxext-dev libxrender-dev libxtst-dev firefox && \
     apt-get install -y apt-transport-https ca-certificates libcurl3-gnutls
 
@@ -22,25 +19,38 @@ RUN apt-get install -y dbus-x11
 RUN apt-get install -y xdg-utils --fix-missing
 
 ## ---- user: developer ----
-ENV USER=developer
+ENV USER=${USER:-developer}
+
 ENV USER_NAME=${USER}
 ENV HOME=/home/${USER}
 
-RUN export DISPLAY=${DISPLAY} && \
-    useradd ${USER} && \
-    export uid=${USER_ID} gid=${GROUP_ID} && \
-    mkdir -p ${HOME} && \
-    mkdir -p ${HOME}/workspace && \
-    mkdir -p /etc/sudoers.d && \
-    echo "${USER}:x:${USER_ID}:${GROUP_ID}:${USER},,,:${HOME}:/bin/bash" >> /etc/passwd && \
-    echo "${USER}:x:${USER_ID}:" >> /etc/group && \
-    echo "${USER} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/${USER} && \
-    chmod 0440 /etc/sudoers.d/${USER} && \
-    chown ${USER}:${USER} -R ${HOME} && \
-    apt-get clean all && \
-    ls /usr/local/ 
-    
+COPY scripts $HOME/scripts
+RUN sudo chown -R $USER:$USER $HOME/scripts && chmod +x $HOME/scripts/*.sh
+
+## ---- Firefox ----
+RUN sudo apt-get remove firefox -y && $HOME/scripts/firefox.sh
+
+##  ---- Google Chromium Browser ----
+RUN echo "Install Google Chromium Browser" && \
+    sudo apt-get install -y libindicator3-7 indicator-application libnss3-nssdb libnss3 libnspr4 libappindicator3-1 fonts-liberation && \
+    wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    sudo dpkg -i google-chrome-stable_current_amd64.deb && \
+    rm google-chrome-stable_current_amd64.deb && \
+    which google-chrome && \
+    echo "CHROMIUM_FLAGS='--no-sandbox --start-maximized --user-data-dir'" | tee ${HOME}/.chromium-browser.init
+
+##  ---- dbus setup ----
+ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
+ENV unix:runtime=yes
+RUN sudo rm -f /var/run/firefox-restart-required && \
+    #sudo mkdir -p /var/run/dbus/system_bus_socket && chmod -R 0777 /var/run/dbus/system_bus_socket && \
+    #sudo mkdir -p /host/run/dbus/system_bus_socket && chmod -R 0777 /host/run/dbus/system_bus_socket && \
+    sudo ln -s ${HOME}/scripts/docker-entrypoint.sh /usr/local/docker-entrypoint.sh
+
 WORKDIR ${HOME}
 USER ${USER}
-CMD ["/usr/bin/firefox"]
+
+#ENTRYPOINT ["/usr/local/docker-entrypoint.sh"]
+#CMD ["/usr/bin/firefox"]
+CMD ["/usr/bin/google-chrome","--no-sandbox","--disable-extensions"]
 
