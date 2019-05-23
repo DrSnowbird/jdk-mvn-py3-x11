@@ -542,25 +542,29 @@ echo "--------------------------------------------------------"
 ## ---- Setup X11 Display -_-- ##
 #################################
 function setupDisplayType() {
+    NODE_IP=
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         # ...
         xhost +SI:localuser:$(id -un) 
-        xhost + ${MY_IP}
         xhost + 127.0.0.1
-        export DISPLAY=${MY_IP}:0 
+        echo ${DISPLAY}
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         # Mac OSX
         xhost + 127.0.0.1
         export DISPLAY=host.docker.internal:0
+        echo ${DISPLAY}
     elif [[ "$OSTYPE" == "cygwin" ]]; then
         # POSIX compatibility layer and Linux environment emulation for Windows
-        export DISPLAY=${MY_IP}:0 
+        #export DISPLAY=${NODE_IP}:0 
+        echo ${DISPLAY}
     elif [[ "$OSTYPE" == "msys" ]]; then
         # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
-        export DISPLAY=${MY_IP}:0 
+        #export DISPLAY=${NODE_IP}:0 
+        echo ${DISPLAY}
     elif [[ "$OSTYPE" == "freebsd"* ]]; then
         # ...
-        export DISPLAY=${MY_IP}:0 
+        #export DISPLAY=${NODE_IP}:0 
+        echo ${DISPLAY}
     else
         # Unknown.
         echo "Unknown OS TYPE: $OSTYPE! Not supported!"
@@ -586,12 +590,14 @@ case "${BUILD_TYPE}" in
     1)
         ## 1: X11/Desktip container build image type
         #### ---- for X11-based ---- ####
-        ##echo ${DISPLAY}
-        ##xhost +SI:localuser:$(id -un) 
-        ##set -x 
-        ##MORE_OPTIONS="${MORE_OPTIONS} -e DISPLAY=$DISPLAY -v $HOME/.chrome:/data -v /dev/shm:/dev/shm -v /etc/hosts:/etc/hosts"
-        ##DISPLAY=${MY_IP}:0
-        setupDisplayType
+        ##
+        set -x 
+        #xhost +
+        #xhost +SI:localuser:$(id -un) 
+        #DISPLAY=:0
+        #setupDisplayType
+        echo ${DISPLAY}
+        MORE_OPTIONS="${MORE_OPTIONS} -e DISPLAY=$DISPLAY -v $HOME/.chrome:/data -v /dev/shm:/dev/shm -v /etc/hosts:/etc/hosts"
         sudo docker run ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${MEDIA_OPTIONS}\
             --name=${instanceName} \
             --restart=${RESTART_OPTION} \
