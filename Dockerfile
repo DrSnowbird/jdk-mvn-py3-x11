@@ -62,7 +62,8 @@ USER ${USER}
 #ENTRYPOINT ["/usr/local/docker-entrypoint.sh"]
 #CMD ["/usr/bin/firefox"]
 # CMD ["/usr/bin/google-chrome","--no-sandbox","--disable-gpu", "--disable-extensions"]
-CMD ["/usr/bin/google-chrome"]goo
+CMD ["/usr/bin/google-chrome"]
 
+# -- test --
 #CMD xeyes
 
