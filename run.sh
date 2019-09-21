@@ -147,7 +147,7 @@ baseDataFolder="$HOME/data-docker"
 ###################################################
 #### **** Container package information ****
 ###################################################
-MY_IP=`ip route get 1|awk '{print$NF;exit;}'`
+MY_IP=` hostname -I|awk '{print $1}'`
 DOCKER_IMAGE_REPO=`echo $(basename $PWD)|tr '[:upper:]' '[:lower:]'|tr "/: " "_" `
 imageTag="${ORGANIZATION}/${DOCKER_IMAGE_REPO}"
 #PACKAGE=`echo ${imageTag##*/}|tr "/\-: " "_"`
@@ -542,7 +542,6 @@ echo "--------------------------------------------------------"
 ## ---- Setup X11 Display -_-- ##
 #################################
 function setupDisplayType() {
-    NODE_IP=
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         # ...
         xhost +SI:localuser:$(id -un) 
@@ -555,15 +554,15 @@ function setupDisplayType() {
         echo ${DISPLAY}
     elif [[ "$OSTYPE" == "cygwin" ]]; then
         # POSIX compatibility layer and Linux environment emulation for Windows
-        #export DISPLAY=${NODE_IP}:0 
+        xhost + 127.0.0.1
         echo ${DISPLAY}
     elif [[ "$OSTYPE" == "msys" ]]; then
         # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
-        #export DISPLAY=${NODE_IP}:0 
+        xhost + 127.0.0.1
         echo ${DISPLAY}
     elif [[ "$OSTYPE" == "freebsd"* ]]; then
         # ...
-        #export DISPLAY=${NODE_IP}:0 
+        xhost + 127.0.0.1
         echo ${DISPLAY}
     else
         # Unknown.
@@ -573,11 +572,32 @@ function setupDisplayType() {
     echo ${DISPLAY}
 }
 
+
+##################################################
+## ---- Setup Corporate Chain's Certificates -- ##
+##################################################
+CERTIFICATE_OPTIONS=
+function setupCorporateCertificates() {
+    cert_dir=`pwd`/certificates
+    if [ -d ./certificates/ ]; then
+            CERTIFICATE_OPTIONS="${CERTIFICATE_OPTIONS} -v ${cert_dir}:/certificates"
+    fi
+    echo "CERTIFICATE_OPTIONS=${CERTIFICATE_OPTIONS}"
+}
+setupCorporateCertificates
+
+
+##################################################
+## ----------------- main --------------------- ##
+##################################################
+
 case "${BUILD_TYPE}" in
     0)
-        ## 0: (default) has neither X11 nor VNC/noVNC container build image type 
-        set -x 
-        sudo docker run ${REMOVE_OPTION} ${MORE_OPTIONS} ${RUN_OPTION} \
+        #### 0: (default) has neither X11 nor VNC/noVNC container build image type
+        #### ---- for headless-based / GUI-less ---- ####
+        set -x
+        MORE_OPTIONS="${MORE_OPTIONS} -v /etc/hosts:/etc/hosts"
+        sudo docker run ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
             --name=${instanceName} \
             --restart=${RESTART_OPTION} \
             ${privilegedString} \
@@ -585,20 +605,17 @@ case "${BUILD_TYPE}" in
             ${ENV_VARS} \
             ${VOLUME_MAP} \
             ${PORT_MAP} \
-            ${imageTag} $*
+            $* \
+            ${imageTag}
         ;;
     1)
-        ## 1: X11/Desktip container build image type
+        #### 1: X11/Desktip container build image type
         #### ---- for X11-based ---- ####
-        ##
         set -x 
-        #xhost +
-        #xhost +SI:localuser:$(id -un) 
-        #DISPLAY=:0
-        #setupDisplayType
+        setupDisplayType
         echo ${DISPLAY}
         MORE_OPTIONS="${MORE_OPTIONS} -e DISPLAY=$DISPLAY -v $HOME/.chrome:/data -v /dev/shm:/dev/shm -v /etc/hosts:/etc/hosts"
-        sudo docker run ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${MEDIA_OPTIONS}\
+        sudo docker run ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${MEDIA_OPTIONS} ${CERTIFICATE_OPTIONS} \
             --name=${instanceName} \
             --restart=${RESTART_OPTION} \
             -v /tmp/.X11-unix:/tmp/.X11-unix \
@@ -607,10 +624,12 @@ case "${BUILD_TYPE}" in
             ${ENV_VARS} \
             ${VOLUME_MAP} \
             ${PORT_MAP} \
-            ${imageTag} $*
+            $* \
+            ${imageTag}
+
         ;;
     2)
-        ## 2: VNC/noVNC container build image type
+        #### 2: VNC/noVNC container build image type
         #### ----------------------------------- ####
         #### -- VNC_RESOLUTION setup default --- ####
         #### ----------------------------------- ####
@@ -619,8 +638,9 @@ case "${BUILD_TYPE}" in
             VNC_RESOLUTION=1920x1080
             ENV_VARS="${ENV_VARS} -e VNC_RESOLUTION=${VNC_RESOLUTION}" 
         fi
-        set -x 
-        sudo docker run ${REMOVE_OPTION} ${MORE_OPTIONS} ${RUN_OPTION} \
+        set -x
+        MORE_OPTIONS="${MORE_OPTIONS} -v /etc/hosts:/etc/hosts"
+        sudo docker run ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
             --name=${instanceName} \
             --restart=${RESTART_OPTION} \
             ${privilegedString} \
@@ -628,11 +648,10 @@ case "${BUILD_TYPE}" in
             ${ENV_VARS} \
             ${VOLUME_MAP} \
             ${PORT_MAP} \
-            ${imageTag} $*
+            $* \
+            ${imageTag}
         ;;
-     *)
-        buildTypeUsage
-        exit 1
+
 esac
 
 set +x

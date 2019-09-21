@@ -16,10 +16,18 @@ if [ $# -lt 1 ]; then
     echo "-------------------------------------------------------------------------------------------"
 fi
 
-MY_DIR=$(dirname "$(readlink -f "$0")")
-
 DOCKERFILE=${1:-./Dockerfile}
-DOCKERFILE=$(realpath $DOCKERFILE)
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    # Linux
+    MY_DIR=$(dirname "$(readlink -f "$0")")
+    DOCKERFILE=$(realpath $DOCKERFILE)
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    # Mac OSX
+    MY_DIR=`pwd`
+else
+    MY_DIR=`pwd`
+fi
+
 BUILD_CONTEXT=$(dirname ${DOCKERFILE})
 
 imageTag=${2}
@@ -52,7 +60,7 @@ REMOVE_CACHE=0
 ##########################################################
 REMOVE_CACHE_OPTION=""
 if [ ${REMOVE_CACHE} -gt 0 ]; then
-    REMOVE_CACHE_OPTION="--rm"
+    REMOVE_CACHE_OPTION="--no-cache --rm"
 fi
 
 ###################################################
@@ -110,12 +118,14 @@ BUILD_ARGS="--build-arg BUILD_DATE=${BUILD_DATE} --build-arg VCS_REF=${VCS_REF}"
 
 ## -- ignore entries start with "#" symbol --
 function generateBuildArgs() {
-    for r in `cat ${DOCKER_ENV_FILE} | grep -v '^#'`; do
-        echo "entry=> $r"
-        key=`echo $r | tr -d ' ' | cut -d'=' -f1`
-        value=`echo $r | tr -d ' ' | cut -d'=' -f2`
-        BUILD_ARGS="${BUILD_ARGS} --build-arg $key=$value"
-    done
+    if [ "${DOCKER_ENV_FILE}" != "" ] && [ -s "${DOCKER_ENV_FILE}" ]; then
+        for r in `cat ${DOCKER_ENV_FILE} | grep -v '^#'`; do
+            echo "entry=> $r"
+            key=`echo $r | tr -d ' ' | cut -d'=' -f1`
+            value=`echo $r | tr -d ' ' | cut -d'=' -f2`
+            BUILD_ARGS="${BUILD_ARGS} --build-arg $key=$value"
+        done
+    fi
 }
 generateBuildArgs
 echo "BUILD_ARGS=${BUILD_ARGS}"
@@ -160,7 +170,7 @@ echo
 
 cd ${BUILD_CONTEXT}
 set -x
-docker build ${REMOVE_CACHE_OPTION} -t ${imageTag} \
+sudo docker build ${REMOVE_CACHE_OPTION} -t ${imageTag} \
     ${BUILD_ARGS} \
     ${options} \
     -f $(basename ${DOCKERFILE}) .
