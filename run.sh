@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +x
+set +e
 
 MY_DIR=$(dirname "$(readlink -f "$0")")
 
@@ -541,6 +541,7 @@ echo "--------------------------------------------------------"
 #################################
 ## ---- Setup X11 Display -_-- ##
 #################################
+X11_OPTION=
 function setupDisplayType() {
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         # ...
@@ -569,7 +570,8 @@ function setupDisplayType() {
         echo "Unknown OS TYPE: $OSTYPE! Not supported!"
         exit 9
     fi
-    echo ${DISPLAY}
+    echo "DISPLAY=${DISPLAY}"
+    echo 
 }
 
 
@@ -588,18 +590,32 @@ setupCorporateCertificates
 
 
 ##################################################
+## ---- Setup accessing HOST's /etc/hosts: ---- ##
+##################################################
+## **************** WARNING: *********************
+## **************** WARNING: *********************
+## **************** WARNING: *********************
+#  => this might open up more attack surface since
+#   /etc/hosts has other nodes IP/name information
+# ------------------------------------------------
+HOSTS_OPTIONS="-v /etc/hosts:/etc/hosts"
+
+
+##################################################
+##################################################
 ## ----------------- main --------------------- ##
 ##################################################
-
+##################################################
+set -x
 case "${BUILD_TYPE}" in
     0)
         #### 0: (default) has neither X11 nor VNC/noVNC container build image type
         #### ---- for headless-based / GUI-less ---- ####
-        set -x
-        MORE_OPTIONS="${MORE_OPTIONS} -v /etc/hosts:/etc/hosts"
-        sudo docker run ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
+        MORE_OPTIONS="${MORE_OPTIONS} ${HOSTS_OPTIONS} "
+        sudo docker run \
             --name=${instanceName} \
             --restart=${RESTART_OPTION} \
+            ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
             ${privilegedString} \
             ${USER_VARS} \
             ${ENV_VARS} \
@@ -610,15 +626,17 @@ case "${BUILD_TYPE}" in
         ;;
     1)
         #### 1: X11/Desktip container build image type
-        #### ---- for X11-based ---- ####
-        set -x 
+        #### ---- for X11-based ---- #### 
         setupDisplayType
         echo ${DISPLAY}
-        MORE_OPTIONS="${MORE_OPTIONS} -e DISPLAY=$DISPLAY -v $HOME/.chrome:/data -v /dev/shm:/dev/shm -v /etc/hosts:/etc/hosts"
-        sudo docker run ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${MEDIA_OPTIONS} ${CERTIFICATE_OPTIONS} \
+        X11_OPTION="-e DISPLAY=$DISPLAY -v $HOME/.chrome:/data -v /dev/shm:/dev/shm -v /tmp/.X11-unix:/tmp/.X11-unix"
+        echo "X11_OPTION=${X11_OPTION}"
+        MORE_OPTIONS="${MORE_OPTIONS} ${HOSTS_OPTIONS} "
+        sudo docker run \
             --name=${instanceName} \
             --restart=${RESTART_OPTION} \
-            -v /tmp/.X11-unix:/tmp/.X11-unix \
+            ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
+            ${X11_OPTION} ${MEDIA_OPTIONS} \
             ${privilegedString} \
             ${USER_VARS} \
             ${ENV_VARS} \
@@ -626,7 +644,6 @@ case "${BUILD_TYPE}" in
             ${PORT_MAP} \
             $* \
             ${imageTag}
-
         ;;
     2)
         #### 2: VNC/noVNC container build image type
@@ -638,11 +655,11 @@ case "${BUILD_TYPE}" in
             VNC_RESOLUTION=1920x1080
             ENV_VARS="${ENV_VARS} -e VNC_RESOLUTION=${VNC_RESOLUTION}" 
         fi
-        set -x
-        MORE_OPTIONS="${MORE_OPTIONS} -v /etc/hosts:/etc/hosts"
-        sudo docker run ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
+        MORE_OPTIONS="${MORE_OPTIONS} ${HOSTS_OPTIONS} "
+        sudo docker run \
             --name=${instanceName} \
             --restart=${RESTART_OPTION} \
+            ${REMOVE_OPTION} ${RUN_OPTION} ${MORE_OPTIONS} ${CERTIFICATE_OPTIONS} \
             ${privilegedString} \
             ${USER_VARS} \
             ${ENV_VARS} \

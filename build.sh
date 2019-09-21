@@ -165,7 +165,7 @@ echo -e "BUILD_ARGS=> \n ${BUILD_ARGS}"
 echo
 
 ###################################################
-#### ---- Build Container ----
+#### ----------- Build Container ------------ #####
 ###################################################
 
 cd ${BUILD_CONTEXT}
@@ -176,6 +176,10 @@ sudo docker build ${REMOVE_CACHE_OPTION} -t ${imageTag} \
     -f $(basename ${DOCKERFILE}) .
 set +x
 cd -
+
+###################################################
+#### --------- More Guides for Users -------- #####
+###################################################
 
 echo "----> Shell into the Container in interactive mode: "
 echo "  docker exec -it --name <some-name> /bin/bash"
@@ -196,5 +200,5 @@ echo "----> Build Docker Images again: "
 echo "To build again: (there is a dot at the end of the command!)"
 echo "  docker build -t ${imageTag} . "
 echo
-docker images |grep "$imageTag"
+sudo docker images |grep "$imageTag"
 
