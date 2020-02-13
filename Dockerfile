@@ -8,7 +8,7 @@ ENV DISPLAY=${DISPLAY}
 USER root
 
 ## ---- X11 ----
-RUN apt-get update && \
+RUN apt-get update -y && \
     # apt-get install -y sudo xauth xorg openbox && \
     apt-get install -y sudo xauth xorg fluxbox && \
     # apt-get install -y libxext-dev libxrender-dev libxtst-dev firefox-esr && \
@@ -33,7 +33,7 @@ RUN sudo chown -R $USER:$USER ${INST_SCRIPTS} && chmod +x ${INST_SCRIPTS}/*.sh
 #### ============================================
 #### ---- Google-Chrome install:  ----
 #### ============================================
-RUN ${INST_SCRIPTS}/google-chrome.sh 
+RUN sudo apt-get update -y && ${INST_SCRIPTS}/google-chrome.sh 
     
 #### ------------------------------------------------
 #### ---- Desktop setup (Google-Chrome, Firefox) ----

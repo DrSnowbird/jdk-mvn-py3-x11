@@ -1,17 +1,17 @@
-# OpenJDK Java 8 (1.8.0_222) JDK + Maven 3.6 + Python 3.6/2.7 + pip 19 + node 12 + npm 6 + Gradle 5.6 + X11 (display GUI)
+# OpenJDK Java 8 (1.8.0_232) JDK + Maven 3.6 + Python 3.6/2.7 + pip 19 + node 13 + npm 6 + Gradle 6 + X11 (display GUI)
 [![](https://images.microbadger.com/badges/image/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own version badge on microbadger.com")
 
 # ** UPDATE **
 Use OpenJDK from now on!!
 
 # Components:
-* openjdk version "1.8.0_222"
-  OpenJDK Runtime Environment (build 1.8.0_222-8u222-b10-1ubuntu1~18.04.1-b10)
-  OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
+* openjdk version "1.8.0_232"
+  OpenJDK Runtime Environment (build 1.8.0_232-8u232-b09-0ubuntu1~18.04.1-b09)
+  OpenJDK 64-Bit Server VM (build 25.232-b09, mixed mode)
 * Apache Maven 3.6
 * Python 3.6 / Python 2.7 + pip 19.2 + Python3 virtual environments (venv, virtualenv, virtualenvwrapper, mkvirtualenv, ..., etc.)
-* Node v12.10.0 + npm 6.10.2 (from NodeSource official Node Distribution)
-* Gradle 5.6
+* Node v13 + npm 6 (from NodeSource official Node Distribution)
+* Gradle 56
 * Other tools: git wget unzip vim python python-setuptools python-dev python-numpy, ..., etc.
 * X11 for desktop display
 
@@ -175,57 +175,63 @@ You might see the warning message in the launching xterm console like below, you
 
 # Releases information
 ```
-developer@7e8aaadf4868:~$ /usr/scripts/printVersions.sh 
+developer@c8d77680aac8:~$ /usr/scripts/printVersions.sh 
 + echo JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 + java -version
-openjdk version "1.8.0_222"
-OpenJDK Runtime Environment (build 1.8.0_222-8u222-b10-1ubuntu1~18.04.1-b10)
-OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
+openjdk version "1.8.0_232"
+OpenJDK Runtime Environment (build 1.8.0_232-8u232-b09-0ubuntu1~18.04.1-b09)
+OpenJDK 64-Bit Server VM (build 25.232-b09, mixed mode)
 + mvn --version
-Apache Maven 3.6.2 (40f52333136460af0dc0d7232c0dc0bcf0d9e117; 2019-08-27T15:06:16Z)
-Maven home: /usr/apache-maven-3.6.2
-Java version: 1.8.0_222, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
+Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f)
+Maven home: /usr/apache-maven-3.6.3
+Java version: 1.8.0_232, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
 Default locale: en, platform encoding: UTF-8
-OS name: "linux", version: "5.0.0-27-generic", arch: "amd64", family: "unix"
+OS name: "linux", version: "5.3.0-28-generic", arch: "amd64", family: "unix"
 + python -V
-Python 2.7.15rc1
+Python 2.7.15+
 + python3 -V
-Python 3.6.7
+Python 3.6.9
 + pip --version
-pip 19.2.3 from /usr/local/lib/python3.6/dist-packages/pip (python 3.6)
+pip 19.3.1 from /usr/local/lib/python3.6/dist-packages/pip (python 3.6)
 + pip3 --version
-pip 19.2.3 from /usr/local/lib/python3.6/dist-packages/pip (python 3.6)
+pip 19.3.1 from /usr/local/lib/python3.6/dist-packages/pip (python 3.6)
 + gradle --version
 
-Welcome to Gradle 5.6.2!
+Welcome to Gradle 6.0.1!
 
 Here are the highlights of this release:
- - Incremental Groovy compilation
- - Groovy compile avoidance
- - Test fixtures for Java projects
- - Manage plugin versions via settings script
+ - Substantial improvements in dependency management, including
+   - Publishing Gradle Module Metadata in addition to pom.xml
+   - Advanced control of transitive versions
+   - Support for optional features and dependencies
+   - Rules to tweak published metadata
+ - Support for Java 13
+ - Faster incremental Java and Groovy compilation
+ - New Zinc compiler for Scala
+ - VS2019 support
+ - Support for Gradle Enterprise plugin 3.0
 
-For more details see https://docs.gradle.org/5.6.2/release-notes.html
+For more details see https://docs.gradle.org/6.0.1/release-notes.html
 
 
 ------------------------------------------------------------
-Gradle 5.6.2
+Gradle 6.0.1
 ------------------------------------------------------------
 
-Build time:   2019-09-05 16:13:54 UTC
-Revision:     55a5e53d855db8fc7b0e494412fc624051a8e781
+Build time:   2019-11-18 20:25:01 UTC
+Revision:     fad121066a68c4701acd362daf4287a7c309a0f5
 
-Kotlin:       1.3.41
-Groovy:       2.5.4
-Ant:          Apache Ant(TM) version 1.9.14 compiled on March 12 2019
-JVM:          1.8.0_222 (Private Build 25.222-b10)
-OS:           Linux 5.0.0-27-generic amd64
+Kotlin:       1.3.50
+Groovy:       2.5.8
+Ant:          Apache Ant(TM) version 1.10.7 compiled on September 1 2019
+JVM:          1.8.0_232 (Private Build 25.232-b09)
+OS:           Linux 5.3.0-28-generic amd64
 
 + npm -v
-6.10.3
+6.13.4
 + node -v
-v12.10.0
+v13.5.0
 + cat /etc/lsb-release /etc/os-release
 DISTRIB_ID=Ubuntu
 DISTRIB_RELEASE=18.04
