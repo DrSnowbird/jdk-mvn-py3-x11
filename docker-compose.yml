@@ -1,0 +1,18 @@
+version: '3' 
+services:
+  jdk-mvn-py3-x11:
+    image: openkbs/jdk-mvn-py3-x11
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jdk-mvn-py3-x11
+    environment:
+      - USER_ID=${USER_ID:-1000}
+      - GROUP_ID=${GROUP_ID:-1000}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./workspace:/home/developer/workspace
+      - ./data:/home/developer/data
+    environment:
+      - DISPLAY=$DISPLAY
+      - DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket

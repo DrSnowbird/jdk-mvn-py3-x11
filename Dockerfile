@@ -8,7 +8,7 @@ ENV DISPLAY=${DISPLAY}
 USER root
 
 ## ---- X11 ----
-RUN apt-get update -y && \
+RUN apt-get update && \
     # apt-get install -y sudo xauth xorg openbox && \
     apt-get install -y sudo xauth xorg fluxbox && \
     # apt-get install -y libxext-dev libxrender-dev libxtst-dev firefox-esr && \
@@ -33,7 +33,7 @@ RUN sudo chown -R $USER:$USER ${INST_SCRIPTS} && chmod +x ${INST_SCRIPTS}/*.sh
 #### ============================================
 #### ---- Google-Chrome install:  ----
 #### ============================================
-RUN sudo apt-get update -y && ${INST_SCRIPTS}/google-chrome.sh 
+RUN ${INST_SCRIPTS}/google-chrome.sh 
     
 #### ------------------------------------------------
 #### ---- Desktop setup (Google-Chrome, Firefox) ----
@@ -62,8 +62,8 @@ USER ${USER}
 #ENTRYPOINT ["/usr/local/docker-entrypoint.sh"]
 #CMD ["/usr/bin/firefox"]
 # CMD ["/usr/bin/google-chrome","--no-sandbox","--disable-gpu", "--disable-extensions"]
-CMD ["/usr/bin/google-chrome"]
+#CMD ["/usr/bin/google-chrome"]
 
 # -- test --
-#CMD xeyes
+CMD xeyes
 
