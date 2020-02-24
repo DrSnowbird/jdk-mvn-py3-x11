@@ -46,10 +46,11 @@ ADD ./config/Desktop $HOME/
 ##  ---- dbus setup ----
 ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
 ENV unix:runtime=yes
-RUN apt-get update -y && \
+
+RUN sudo apt-get update -y && \
     sudo rm -f /var/run/firefox-restart-required && \
     #sudo mkdir -p /var/run/dbus/system_bus_socket && chmod -R 0777 /var/run/dbus/system_bus_socket && \
-    sudo mkdir -p /host/run/dbus/system_bus_socket && chmod -R 0777 /host/run/dbus/system_bus_socket && \
+    sudo mkdir -p /host/run/dbus/system_bus_socket && sudo chmod -R 0777 /host/run/dbus/system_bus_socket && \
     sudo ln -s ${INST_SCRIPTS}/docker-entrypoint.sh /usr/local/docker-entrypoint.sh && \
     sudo rm -rf ${HOME}/.cache && \
     sudo chown -R ${USER}:${USER} ${HOME}
