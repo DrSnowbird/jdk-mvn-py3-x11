@@ -33,7 +33,11 @@ BUILD_TYPE=1
 ##       ==> Usually, when not in debugging mode anymore, then use 1 as choice.
 ##       ==> Or, your frequent needs of the container for DEV environment Use.
 ## ------------------------------------------------------------------------
-RUN_TYPE=0
+if [ "$1" = "-d" ]; then
+    RUN_TYPE=1
+    shift 1
+fi
+RUN_TYPE=${RUN_TYPE:-0}
 
 ## ------------------------------------------------------------------------
 ## Change to one (1) if run.sh needs to use host's user/group to run the Container
@@ -47,8 +51,11 @@ USER_VARS_NEEDED=0
 ## Valid "RESTART_OPTION" values:
 ##  { no, on-failure, unless-stopped, always }
 ## ------------------------------------------------------------------------
-RESTART_OPTION=no
-#RESTART_OPTION=unless-stopped
+if [ "$1" = "-a" ] && [ "${RUN_TYPE}" = "1" ] ; then
+    RESTART_OPTION=always
+    shift 1
+fi
+RESTART_OPTION=${RESTART_OPTION:-no}
 
 ## ------------------------------------------------------------------------
 ## More optional values:
@@ -247,6 +254,21 @@ function debug() {
     fi
 }
 
+function cutomizedVolume() {
+    DATA_VOLUME=$1 
+    if [ "`echo $DATA_VOLUME|grep 'volume-'`" != "" ]; then
+        docker_volume=`echo $DATA_VOLUME | cut -d'-' -f2 | cut -d':' -f1`
+        dest_volume=`echo $DATA_VOLUME | cut -d'-' -f2 | cut -d':' -f2`
+        source_volume=$(basename $imageTag)_${docker_volume}
+        sudo docker volume create ${source_volume}
+        
+        VOLUME_MAP="-v ${source_volume}:${dest_volume} ${VOLUME_MAP}"
+    else
+        echo "---- ${DATA_VOLUME} already is defined! Hence, ignore setup ${DATA_VOLUME} ..."
+        echo "---> VOLUME_MAP=${VOLUME_MAP}"
+    fi
+}
+
 function generateVolumeMapping() {
     if [ "$VOLUMES_LIST" == "" ]; then
         ## -- If locally defined in this file, then respect that first.
@@ -258,50 +280,54 @@ function generateVolumeMapping() {
         hasColon=`echo $vol|grep ":"`
         ## -- allowing change local volume directories --
         if [ "$hasColon" != "" ]; then
-            left=`echo $vol|cut -d':' -f1`
-            right=`echo $vol|cut -d':' -f2`
-            leftHasDot=`echo $left|grep "\./"`
-            if [ "$leftHasDot" != "" ]; then
-                ## has "./data" on the left
-                if [[ ${right} == "/"* ]]; then
-                    ## -- pattern like: "./data:/containerPath/data"
-                    debug "-- pattern like ./data:/data --"
-                    VOLUME_MAP="${VOLUME_MAP} -v `pwd`/${left}:${right}"
-                else
-                    ## -- pattern like: "./data:data"
-                    debug "-- pattern like ./data:data --"
-                    VOLUME_MAP="${VOLUME_MAP} -v `pwd`/${left}:${DOCKER_VOLUME_DIR}/${right}"
-                fi
-                mkdir -p `pwd`/${left}
-                if [ $DEBUG -gt 0 ]; then ls -al `pwd`/${left}; fi
+            if [ "`echo $vol|grep 'volume-'`" != "" ]; then
+                cutomizedVolume $vol
             else
-                ## No "./data" on the left
-                if [ "$leftHasAbsPath" != "" ]; then
-                    ## Has pattern like "/data" on the left
+                left=`echo $vol|cut -d':' -f1`
+                right=`echo $vol|cut -d':' -f2`
+                leftHasDot=`echo $left|grep "\./"`
+                if [ "$leftHasDot" != "" ]; then
+                    ## has "./data" on the left
                     if [[ ${right} == "/"* ]]; then
-                        ## -- pattern like: "/data:/containerPath/data"
-                        debug "-- pattern like /data:/containerPath/data --"
-                        VOLUME_MAP="${VOLUME_MAP} -v ${left}:${right}"
-                    else
-                        ## -- pattern like: "/data:data"
-                        debug "-- pattern like /data:data --"
-                        VOLUME_MAP="${VOLUME_MAP} -v ${left}:${DOCKER_VOLUME_DIR}/${right}"
-                    fi
-                    mkdir -p ${LOCAL_VOLUME_DIR}/${left}
-                    if [ $DEBUG -gt 0 ]; then ls -al ${LOCAL_VOLUME_DIR}/${left}; fi
-                else
-                    ## No pattern like "/data" on the left
-                    if [[ ${right} == "/"* ]]; then
-                        ## -- pattern like: "data:/containerPath/data"
+                        ## -- pattern like: "./data:/containerPath/data"
                         debug "-- pattern like ./data:/data --"
-                        VOLUME_MAP="${VOLUME_MAP} -v ${LOCAL_VOLUME_DIR}/${left}:${right}"
+                        VOLUME_MAP="${VOLUME_MAP} -v `pwd`/${left}:${right}"
                     else
-                        ## -- pattern like: "data:data"
-                        debug "-- pattern like data:data --"
-                        VOLUME_MAP="${VOLUME_MAP} -v ${LOCAL_VOLUME_DIR}/${left}:${DOCKER_VOLUME_DIR}/${right}"
+                        ## -- pattern like: "./data:data"
+                        debug "-- pattern like ./data:data --"
+                        VOLUME_MAP="${VOLUME_MAP} -v `pwd`/${left}:${DOCKER_VOLUME_DIR}/${right}"
                     fi
-                    mkdir -p ${LOCAL_VOLUME_DIR}/${left}
-                    if [ $DEBUG -gt 0 ]; then ls -al ${LOCAL_VOLUME_DIR}/${left}; fi
+                    mkdir -p `pwd`/${left}
+                    if [ $DEBUG -gt 0 ]; then ls -al `pwd`/${left}; fi
+                else
+                    ## No "./data" on the left
+                    if [ "$leftHasAbsPath" != "" ]; then
+                        ## Has pattern like "/data" on the left
+                        if [[ ${right} == "/"* ]]; then
+                            ## -- pattern like: "/data:/containerPath/data"
+                            debug "-- pattern like /data:/containerPath/data --"
+                            VOLUME_MAP="${VOLUME_MAP} -v ${left}:${right}"
+                        else
+                            ## -- pattern like: "/data:data"
+                            debug "-- pattern like /data:data --"
+                            VOLUME_MAP="${VOLUME_MAP} -v ${left}:${DOCKER_VOLUME_DIR}/${right}"
+                        fi
+                        mkdir -p ${LOCAL_VOLUME_DIR}/${left}
+                        if [ $DEBUG -gt 0 ]; then ls -al ${LOCAL_VOLUME_DIR}/${left}; fi
+                    else
+                        ## No pattern like "/data" on the left
+                        if [[ ${right} == "/"* ]]; then
+                            ## -- pattern like: "data:/containerPath/data"
+                            debug "-- pattern like ./data:/data --"
+                            VOLUME_MAP="${VOLUME_MAP} -v ${LOCAL_VOLUME_DIR}/${left}:${right}"
+                        else
+                            ## -- pattern like: "data:data"
+                            debug "-- pattern like data:data --"
+                            VOLUME_MAP="${VOLUME_MAP} -v ${LOCAL_VOLUME_DIR}/${left}:${DOCKER_VOLUME_DIR}/${right}"
+                        fi
+                        mkdir -p ${LOCAL_VOLUME_DIR}/${left}
+                        if [ $DEBUG -gt 0 ]; then ls -al ${LOCAL_VOLUME_DIR}/${left}; fi
+                    fi
                 fi
             fi
         else
@@ -347,6 +373,19 @@ echo "PORT_MAP=${PORT_MAP}"
 #### ---- Generate Environment Variables       ----
 ###################################################
 ENV_VARS=""
+function generateEnvVars_v2() {
+    while read line; do
+        echo "Line=$line"
+        key=${line%=*}
+        value=${line#*=}
+        key=$(eval echo $value)
+        ENV_VARS="${ENV_VARS} -e ${line%=*}=$(eval echo $value)"
+    done < <(grep -E "^[[:blank:]]*$1.+[[:blank:]]*=[[:blank:]]*.+[[:blank:]]*" ${DOCKER_ENV_FILE} | grep -v "^#")
+    echo "ENV_VARS=$ENV_VARS"
+}
+generateEnvVars_v2
+echo ">> ENV_VARS=$ENV_VARS"
+
 function generateEnvVars() {
     if [ "${1}" != "" ]; then
         ## -- product key patterns, e.g., "^MYSQL_*"
@@ -357,30 +396,43 @@ function generateEnvVars() {
         #productEnvVars=`grep -E "^[[:blank:]]*$1[a-zA-Z0-9_]+[[:blank:]]*=[[:blank:]]*[a-zA-Z0-9_]+[[:blank:]]*" ${DOCKER_ENV_FILE}`
         productEnvVars=`grep -E "^[[:blank:]]*$1.+[[:blank:]]*=[[:blank:]]*.+[[:blank:]]*" ${DOCKER_ENV_FILE} | grep -v "^#"`
     fi
+    for vars in 
+        do
+        echo "Line=$line"
+        key=${line%=*}
+        value=${line#*=}
+        #key=$(eval echo $value)
+        #ENV_VARS="${ENV_VARS} -e ${line%=*}=$(eval echo $value)"
+        ENV_VARS="${ENV_VARS} -e ${line}"
+    done
     ENV_VARS_STRING=""
     for vars in ${productEnvVars// /}; do
         debug "Entry => $vars"
+        key=${vars%=*}
+        value=${vars#*=}
         if [ "$1" != "" ]; then
             matched=`echo $vars|grep -E "${1}"`
             if [ ! "$matched" == "" ]; then
-                ENV_VARS_STRING="${ENV_VARS_STRING} ${vars}"
+                ENV_VARS="${ENV_VARS} -e $key=$(eval echo $value)"
+                #ENV_VARS="${ENV_VARS} ${vars}"
             fi
         else
-            ENV_VARS_STRING="${ENV_VARS_STRING} ${vars}"
+            #ENV_VARS="${ENV_VARS} ${vars}"
+            ENV_VARS="${ENV_VARS} -e $key=$(eval echo $value)"
         fi
     done
-    ## IFS default is "space tab newline" already
-    #IFS=',; ' read -r -a ENV_VARS_ARRAY <<< "${ENV_VARS_STRING}"
-    read -r -a ENV_VARS_ARRAY <<< "${ENV_VARS_STRING}"
-    # To iterate over the elements:
-    for element in "${ENV_VARS_ARRAY[@]}"
-    do
-        ENV_VARS="${ENV_VARS} -e ${element}"
-    done
-    if [ $DEBUG -gt 0 ]; then echo "ENV_VARS_ARRAY=${ENV_VARS_ARRAY[@]}"; fi
+#    ## IFS default is "space tab newline" already
+#    #IFS=',; ' read -r -a ENV_VARS_ARRAY <<< "${ENV_VARS_STRING}"
+#    read -r -a ENV_VARS_ARRAY <<< "${ENV_VARS_STRING}"
+#    # To iterate over the elements:
+#    for element in "${ENV_VARS_ARRAY[@]}"
+#    do
+#        ENV_VARS="${ENV_VARS} -e ${element}"
+#    done
+#    if [ $DEBUG -gt 0 ]; then echo "ENV_VARS_ARRAY=${ENV_VARS_ARRAY[@]}"; fi
 }
-generateEnvVars
-echo "ENV_VARS=${ENV_VARS}"
+#generateEnvVars
+#echo "ENV_VARS=${ENV_VARS}"
 
 ###################################################
 #### ---- Setup Docker Build Proxy ----
@@ -447,8 +499,10 @@ echo ${privilegedString}
 #### ---- Mostly, you don't need change below ----
 ###################################################
 function cleanup() {
-    if [ ! "`sudo docker ps -a|grep ${instanceName}`" == "" ]; then
-         sudo docker rm -f ${instanceName}
+    containerID=`sudo docker ps -a|grep "${instanceName}" | awk '{print $1}'`
+    # if [ ! "`sudo docker ps -a|grep ${instanceName}`" == "" ]; then
+    if [ "${containerID}" != "" ]; then
+         sudo docker rm -f ${containerID}
     fi
 }
 
@@ -606,7 +660,7 @@ HOSTS_OPTIONS="-v /etc/hosts:/etc/hosts"
 ## ----------------- main --------------------- ##
 ##################################################
 ##################################################
-set -x
+
 case "${BUILD_TYPE}" in
     0)
         #### 0: (default) has neither X11 nor VNC/noVNC container build image type
@@ -622,14 +676,15 @@ case "${BUILD_TYPE}" in
             ${VOLUME_MAP} \
             ${PORT_MAP} \
             ${imageTag} \
-            $* 
+            $*
         ;;
     1)
         #### 1: X11/Desktip container build image type
         #### ---- for X11-based ---- #### 
         setupDisplayType
         echo ${DISPLAY}
-        X11_OPTION="-e DISPLAY=$DISPLAY -v $HOME/.chrome:/data -v /dev/shm:/dev/shm -v /tmp/.X11-unix:/tmp/.X11-unix -e DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket"
+        #X11_OPTION="-e DISPLAY=$DISPLAY -v $HOME/.chrome:/data -v /dev/shm:/dev/shm -v /tmp/.X11-unix:/tmp/.X11-unix -e DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket"
+        X11_OPTION="-e DISPLAY=$DISPLAY -v /dev/shm:/dev/shm -v /tmp/.X11-unix:/tmp/.X11-unix "
         echo "X11_OPTION=${X11_OPTION}"
         MORE_OPTIONS="${MORE_OPTIONS} ${HOSTS_OPTIONS} "
         sudo docker run \
@@ -644,7 +699,7 @@ case "${BUILD_TYPE}" in
             ${VOLUME_MAP} \
             ${PORT_MAP} \
             ${imageTag} \
-            $* 
+            $*
         ;;
     2)
         #### 2: VNC/noVNC container build image type
@@ -667,10 +722,9 @@ case "${BUILD_TYPE}" in
             ${VOLUME_MAP} \
             ${PORT_MAP} \
             ${imageTag} \
-            $* 
+            $*
         ;;
 
 esac
 
-set +x
 

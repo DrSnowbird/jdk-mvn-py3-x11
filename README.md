@@ -1,19 +1,20 @@
-# OpenJDK Java 8 (1.8.0_242) JDK + Maven 3.6 + Python 3.6/2.7 + pip 29 + node 13 + npm 6 + Gradle 6 + X11 (display GUI)
+# OpenJDK Java 8 (1.8.0_252) JDK + Maven 3.6 + Python 3.6/2.7 + pip 20 + node 14 + npm 6.14 + Gradle 6 + X11 (display GUI)
 [![](https://images.microbadger.com/badges/image/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own version badge on microbadger.com")
 
 # ** UPDATE **
 Use OpenJDK from now on!!
 
 # Components:
-* openjdk version "1.8.0_242"
-  OpenJDK Runtime Environment (build 1.8.0_242-8u242-b08-0ubuntu3~18.04-b08)
-  OpenJDK 64-Bit Server VM (build 25.242-b08, mixed mode)
+* openjdk version "1.8.0_252"
+  OpenJDK Runtime Environment (build 1.8.0_252-8u252-b09-1~18.04-b09)
+  OpenJDK 64-Bit Server VM (build 25.252-b09, mixed mode)
 * Apache Maven 3.6
 * Python 3.6 / Python 2.7 + pip 19.2 + Python3 virtual environments (venv, virtualenv, virtualenvwrapper, mkvirtualenv, ..., etc.)
 * Node v13 + npm 6 (from NodeSource official Node Distribution)
 * Gradle 56
 * Other tools: git wget unzip vim python python-setuptools python-dev python-numpy, ..., etc.
 * X11 for desktop display
+* Google-Chrome 80.0 + Firefox 74.0
 
 # Pull the image from Docker Repository
 
@@ -178,18 +179,22 @@ You might see the warning message in the launching xterm console like below, you
 developer@solar01:~$ /usr/scripts/printVersions.sh 
 + echo JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
++ whereis java
+java: /usr/bin/java /usr/share/java /usr/lib/jvm/java-8-openjdk-amd64/bin/java /usr/share/man/man1/java.1.gz
++ echo
+
 + java -version
-openjdk version "1.8.0_242"
-OpenJDK Runtime Environment (build 1.8.0_242-8u242-b08-0ubuntu3~18.04-b08)
-OpenJDK 64-Bit Server VM (build 25.242-b08, mixed mode)
+openjdk version "1.8.0_252"
+OpenJDK Runtime Environment (build 1.8.0_252-8u252-b09-1~18.04-b09)
+OpenJDK 64-Bit Server VM (build 25.252-b09, mixed mode)
 + mvn --version
 Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f)
 Maven home: /usr/apache-maven-3.6.3
-Java version: 1.8.0_242, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
+Java version: 1.8.0_252, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
 Default locale: en, platform encoding: UTF-8
-OS name: "linux", version: "5.3.0-40-generic", arch: "amd64", family: "unix"
+OS name: "linux", version: "5.3.0-46-generic", arch: "amd64", family: "unix"
 + python -V
-Python 2.7.15+
+Python 2.7.17
 + python3 -V
 Python 3.6.9
 + pip --version
@@ -225,13 +230,13 @@ Revision:     fad121066a68c4701acd362daf4287a7c309a0f5
 Kotlin:       1.3.50
 Groovy:       2.5.8
 Ant:          Apache Ant(TM) version 1.10.7 compiled on September 1 2019
-JVM:          1.8.0_242 (Private Build 25.242-b08)
-OS:           Linux 5.3.0-40-generic amd64
+JVM:          1.8.0_252 (Private Build 25.252-b09)
+OS:           Linux 5.3.0-46-generic amd64
 
 + npm -v
-6.13.7
+6.14.4
 + node -v
-v13.9.0
+v14.0.0
 + cat /etc/lsb-release /etc/os-release
 DISTRIB_ID=Ubuntu
 DISTRIB_RELEASE=18.04
@@ -249,6 +254,5 @@ BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
 PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
 VERSION_CODENAME=bionic
 UBUNTU_CODENAME=bionic
-
 ```
 
