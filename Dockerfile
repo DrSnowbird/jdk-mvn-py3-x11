@@ -57,6 +57,12 @@ RUN sudo apt-get update -y && \
     # sudo mkdir -p /host/run/dbus/system_bus_socket
     # sudo apt-get install -qqy x11-apps
 
+#=================================
+# Fix sudo issue: 
+# sudo: setrlimit(RLIMIT_CORE): Operation not permitted
+#=================================
+RUN echo "Set disable_coredump false" | sudo tee -a /etc/sudo.conf
+
 WORKDIR ${HOME}
 USER ${USER}
 
