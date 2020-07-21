@@ -1,4 +1,4 @@
-# OpenJDK Java 8 or 11 JDK + Maven 3.6 + Python 3.6 + pip 20 + node 14 + npm 6.14 + Gradle 6 + X11 (Desktop GUI)
+# OpenJDK Java 8/11 + Maven 3.6 + Python 3.6 + pip 20 + node 14 + npm 6.14 + Gradle 6 + X11 (Desktop GUI)
 [![](https://images.microbadger.com/badges/image/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own version badge on microbadger.com")
 
 # ** UPDATE **
