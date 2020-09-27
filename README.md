@@ -1,11 +1,14 @@
 # OpenJDK Java 8/11 + Maven 3.6 + Python 3.6 + pip 20 + node 14 + npm 6.14 + Gradle 6 + X11 (Desktop GUI)
 [![](https://images.microbadger.com/badges/image/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/openkbs/jdk-mvn-py3-x11.svg)](https://microbadger.com/images/openkbs/jdk-mvn-py3-x11 "Get your own version badge on microbadger.com")
 
+# Note
+* Due to some issue in migrating from Ubuntu 18.04 to Ubuntu 20.04, this X11 Container GIT will be using Ubuntu 18.04 until the issue resolved.
+
 # ** UPDATE **
 Use OpenJDK from now on!!
 
 # Components:
-* [Base Container Image: openkbs/jdk-mvn-py3](https://github.com/DrSnowbird/jdk-mvn-py3#openjdk-java-11-jdk--maven-36--python-38---pip-20--node-14--npm-6--gradle-6)
+* [Base Container Image: openkbs/jdk-mvn-py3](https://github.com/DrSnowbird/jdk-mvn-py3#openjdk-java-811--maven-36--python-38---pip-20--node-14--npm-6--gradle-6)
 * [Base Components: OpenJDK, Python 3, PIP, Node/NPM, Gradle, Maven, etc.](https://github.com/DrSnowbird/jdk-mvn-py3#components)
 * X11 for desktop display
 * Google-Chrome + Firefox
