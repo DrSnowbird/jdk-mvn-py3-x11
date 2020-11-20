@@ -35,6 +35,16 @@ mkdir ./data
 docker run -d --name my-jdk-mvn-py3-x11 -v $PWD/data:/data -i -t openkbs/jdk-mvn-py3-x11
 ```
 
+# Disposal-able Web Browsers using X11 Container - one of Possible Other Usages
+You can use this X11 Container as your "isolated Container for your internet browsing - while keep the safety (security) of HOST computer. And, you can just do below (in the future, a slim-version of this X11 only browsers will be created for just this purpose with security locked down removing sudo and other measures - to just use this Container as Docker-based Browser for more safety in browsing the Internet) to prevent using your HOST's PC/laptop to expose your HOST computer to
+```
+./run.sh firefox
+
+or
+
+./run.sh google-chrome --no-sandbox
+```
+
 # To lunch multiple X11 Desktop applications
 Default is to show xeyes (X11 app) when using "docker-compose up" or "make up".
 You can use another host's teminal to enter the Container to start run, say, Firefox or Google-Chrome:
