@@ -8,7 +8,7 @@
 Use OpenJDK from now on!!
 
 # Components:
-* [Base Container Image: openkbs/jdk-mvn-py3](https://github.com/DrSnowbird/jdk-mvn-py3#openjdk-java-811--maven-36--python-38---pip-20--node-14--npm-6--gradle-6)
+* [Base Container Image: openkbs/jdk-mvn-py3](https://github.com/DrSnowbird/jdk-mvn-py3)
 * [Base Components: OpenJDK, Python 3, PIP, Node/NPM, Gradle, Maven, etc.](https://github.com/DrSnowbird/jdk-mvn-py3#components)
 * X11 for desktop display
 * Google-Chrome + Firefox
@@ -33,6 +33,21 @@ Then, you're ready to run:
 ```bash
 mkdir ./data
 docker run -d --name my-jdk-mvn-py3-x11 -v $PWD/data:/data -i -t openkbs/jdk-mvn-py3-x11
+```
+
+# To lunch multiple X11 Desktop applications
+Default is to show xeyes (X11 app) when using "docker-compose up" or "make up".
+You can use another host's teminal to enter the Container to start run, say, Firefox or Google-Chrome:
+```
+./shell.sh 
+
+(once you enter the Container - while you have another terminal have xeyes running)
+
+firefox
+
+or
+
+google-chrome --no-sandbox 
 ```
 
 # Build and Run your own image
@@ -112,8 +127,7 @@ Hello, World
 ```
 Hence, the alias above, "djavac" and "djava" is your docker-based "javac" and "java" commands and
 it will work the same way as your local installed Java's "javac" and "java" commands.
-However, for larger complex projects, you might want to consider to use Docker-based IDE.
-
+However, for larger complex projects, you might want to consider to use Docker-based IDEs as listed in the later sections of this document.
 
 # Python Virtual Environments
 There are various ways to run Python virtual envrionments, for example,

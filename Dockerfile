@@ -15,7 +15,7 @@ RUN apt-get update && \
     apt-get install -y libxext-dev libxrender-dev libxtst-dev firefox && \
     apt-get install -y apt-transport-https ca-certificates libcurl3-gnutls
 
-RUN apt-get install -y apt-utils packagekit-gtk3-module libcanberra-gtk3-module
+#RUN apt-get install -y apt-utils packagekit-gtk3-module libcanberra-gtk3-module
 RUN apt-get install -y dbus-x11 
 RUN apt-get install -y xdg-utils --fix-missing
 
@@ -33,8 +33,8 @@ RUN sudo chown -R $USER:$USER ${INST_SCRIPTS} && chmod +x ${INST_SCRIPTS}/*.sh
 #### ============================================
 #### ---- Google-Chrome install:  ----
 #### ============================================
-RUN ${INST_SCRIPTS}/google-chrome.sh 
-    
+RUN ${INST_SCRIPTS}/google-chrome.sh  
+ 
 #### ------------------------------------------------
 #### ---- Desktop setup (Google-Chrome, Firefox) ----
 #### ------------------------------------------------
