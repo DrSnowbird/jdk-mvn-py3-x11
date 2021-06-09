@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
-ORGANIZATION=${ORGANIZATION:-mitre}
-PROJECT=${PROJECT:-recast}
+ORGANIZATION=${ORGANIZATION:-openkbs}
+PROJECT=${PROJECT:-myproject}
 APPLICATION_NAME=${PWD##*/}
 APP_VERSION=${APP_VERSION:-1.0.0}
 
@@ -10,7 +10,6 @@ FROM_BASE=${FROM_BASE:-centos:8}
 imageTag=${imageTag:-"${ORGANIZATION}/${APPLICATION_NAME}"}
 
 ## Docker Registry (Private Server)
-#REGISTRY_HOST=${REGISTRY_HOME:-recast-dev-2.mitre.org:5000}
 #REGISTRY_IMAGE=${REGISTRY_HOST}/${imageTag}
 VERSION=${APP_VERSION}-$(date +%Y%m%d)
 

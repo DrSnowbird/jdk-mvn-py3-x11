@@ -5,3 +5,6 @@ data
 *.zip
 *.swp
 *tmp
+
+workspace
+
