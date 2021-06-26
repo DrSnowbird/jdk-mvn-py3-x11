@@ -44,7 +44,7 @@ ADD ./config/Desktop $HOME/
 # DBus setup
 #=================================
 ##  ---- dbus setup ----
-ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
+#ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
 ENV unix:runtime=yes
 
 RUN sudo apt-get update -y && \

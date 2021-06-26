@@ -17,6 +17,7 @@ services:
       - "/dev/snd:/dev/snd"
     volumes:
       - /dev/shm:/dev/shm
+      - /etc/host:/etc/host
       - /tmp/.X11-unix:/tmp/.X11-unix
       - ./workspace:/home/developer/workspace
       - ./data:/home/developer/data
