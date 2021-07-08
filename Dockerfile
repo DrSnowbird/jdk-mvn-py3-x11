@@ -11,7 +11,6 @@ USER root
 RUN apt-get update && \
     # apt-get install -y sudo xauth xorg openbox && \
     apt-get install -y sudo xauth xorg fluxbox && \
-    # apt-get install -y libxext-dev libxrender-dev libxtst-dev firefox-esr && \
     apt-get install -y libxext-dev libxrender-dev libxtst-dev firefox && \
     apt-get install -y apt-transport-https ca-certificates libcurl3-gnutls
 
@@ -30,22 +29,45 @@ ENV INST_SCRIPTS=${HOME}/scripts
 COPY scripts $HOME/scripts
 RUN sudo chown -R $USER:$USER ${INST_SCRIPTS} && chmod +x ${INST_SCRIPTS}/*.sh
 
+########################
+#### ---- Yarn ---- ####
+########################
+# Ref: https://classic.yarnpkg.com/en/docs/install/#debian-stable
+# fix yarn key
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
+    apt-get update -y && \ 
+    apt-get install -y yarn
+    
+#######################################
+#### ---- Firefox libs:       ---- ####
+#######################################
+RUN sudo apt-get install -y xdg-utils libgbm1 --fix-missing
+
 #### ============================================
 #### ---- Google-Chrome install:  ----
 #### ============================================
-RUN ${INST_SCRIPTS}/google-chrome.sh  
+#RUN ${INST_SCRIPTS}/google-chrome.sh  
  
+#######################################
+#### ---- Google-Chrome       ---- ####
+#######################################
+ARG CHROME_DEB_URL=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+ARG CHROME_DEB=google-chrome-stable_current_amd64.deb
+#wget -cq https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN wget -cq ${CHROME_DEB_URL} && \
+    sudo apt-get update && \
+    sudo apt-get --fix-broken install -y && \
+    sudo apt-get install -y fonts-liberation libnspr4 libnss3 && \
+    sudo dpkg -i ${CHROME_DEB} && \
+    rm ${CHROME_DEB}
+
+COPY ./config/Desktop ${HOME}/Desktop
+
 #### ------------------------------------------------
 #### ---- Desktop setup (Google-Chrome, Firefox) ----
 #### ------------------------------------------------
 ADD ./config/Desktop $HOME/
-
-#=================================
-# DBus setup
-#=================================
-##  ---- dbus setup ----
-#ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
-ENV unix:runtime=yes
 
 RUN sudo apt-get update -y && \
     sudo rm -f /var/run/firefox-restart-required && \
@@ -56,6 +78,13 @@ RUN sudo apt-get update -y && \
     sudo chown -R ${USER}:${USER} ${HOME}
     # sudo mkdir -p /host/run/dbus/system_bus_socket
     # sudo apt-get install -qqy x11-apps
+
+#=================================
+# DBus setup
+#=================================
+##  ---- dbus setup ----
+#ENV DBUS_SYSTEM_BUS_ADDRESS=unix:path=/host/run/dbus/system_bus_socket
+ENV unix:runtime=yes
 
 #=================================
 # Fix sudo issue: 
