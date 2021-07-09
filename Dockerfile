@@ -87,6 +87,11 @@ RUN sudo apt-get update -y && \
 ENV unix:runtime=yes
 
 #=================================
+# libcanberra-gtk setup
+#=================================
+RUN sudo apt-get install libcanberra-gtk*
+
+#=================================
 # Fix sudo issue: 
 # sudo: setrlimit(RLIMIT_CORE): Operation not permitted
 #=================================
