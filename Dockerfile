@@ -7,7 +7,9 @@ ENV DISPLAY=${DISPLAY}
 
 USER root
 
-## ---- X11 ----
+########################
+#### ---- X11  ---- ####
+########################
 RUN apt-get update && \
     # apt-get install -y sudo xauth xorg openbox && \
     apt-get install -y sudo xauth xorg fluxbox && \
@@ -40,18 +42,18 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
     apt-get install -y yarn
     
 #######################################
-#### ---- Firefox libs:       ---- ####
+#### ---- Firefox             ---- ####
 #######################################
-RUN sudo apt-get install -y xdg-utils libgbm1 --fix-missing
+#RUN ${INST_SCRIPTS}/firefox.sh  
+RUN sudo apt-get update -y && \
+    sudo apt-get install --fix-missing -y xdg-utils \
+        libgbm1 mesa-utils libgl1-mesa-glx libcanberra-gtk-module libcanberra-gtk3-module && \
+    sudo rm -f $HOME/.config/pulse/*
 
-#### ============================================
-#### ---- Google-Chrome install:  ----
-#### ============================================
-#RUN ${INST_SCRIPTS}/google-chrome.sh  
- 
 #######################################
 #### ---- Google-Chrome       ---- ####
 #######################################
+#RUN ${INST_SCRIPTS}/google-chrome.sh  
 ARG CHROME_DEB_URL=https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 ARG CHROME_DEB=google-chrome-stable_current_amd64.deb
 #wget -cq https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
