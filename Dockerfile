@@ -103,5 +103,6 @@ USER ${USER}
 #CMD ["/usr/bin/google-chrome"]
 
 # -- test --
-CMD xeyes
+#CMD xeyes
 
+CMD ["/usr/bin/google-chrome","--no-sandbox", "https://github.com/DrSnowbird/jdk11-mvn-py3", "https://music.youtube.com/"]
